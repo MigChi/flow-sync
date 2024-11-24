@@ -51,9 +51,13 @@ public class PomodoroBase implements PomodoroClock {
     }
   }
 
+  /**
+   * Toggles isWorkTime to be true or false.
+   */
   public void switchActiveTimer() {
-    isWorkTime = !isWorkTime;
+    this.isWorkTime = !this.isWorkTime;
   }
+
 
   public void editWorkCycles(int numberOfWorkCycles) {
     workCycles = numberOfWorkCycles;
