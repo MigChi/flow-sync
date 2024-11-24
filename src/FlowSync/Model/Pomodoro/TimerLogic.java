@@ -2,8 +2,15 @@ package FlowSync.Model.Pomodoro;
 
 
 public interface TimerLogic {
+
+  /**
+   * Get the time remaining
+   */
   long getTimeRemaining();
 
+  /**
+   * Check if the timer is completed
+   */
   boolean isCompleted();
 
   /**
