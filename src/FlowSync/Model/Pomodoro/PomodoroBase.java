@@ -14,10 +14,9 @@ import java.util.HashMap;
 public class PomodoroBase implements PomodoroClock {
   private int workCycles;
   private boolean isWorkTime;
-  private TimerLogic work;
-  private TimerLogic short_break;
-  private TimerLogic long_break;
   private final HashMap<String, TimerLogic> timers = new HashMap<>();
+  private String currentTimer;
+  private int currentCycle = 0;
 
   //Default constructor
   public PomodoroBase(int numberOfWorkCycles) {
@@ -25,54 +24,51 @@ public class PomodoroBase implements PomodoroClock {
   }
 
   public void startTimer() { //implement timer switching logic
-
+    TimerLogic timer = this.timers.get(currentTimer);
+    timer.startTimer();
   }
 
   public void pauseTimer() {
-  }
-
-  public void resumeTimer() {
+    TimerLogic timer = this.timers.get(currentTimer);
+    timer.pauseTimer();
   }
 
   public void editTimer(String timerName, int hours, int minutes) {
-    switch (timerName) {
-      case "work":
-        this.work.setDuration(hours, minutes);
-        break;
-      case "short break":
-        this.short_break.setDuration(hours, minutes);
-        break;
-      case "long break":
-        this.long_break.setDuration(hours, minutes);
-        break;
-      default:
-        //Throw an error here
-        break;
+    this.timers.get(timerName).setDuration(hours, minutes);
+  }
+
+  public void switchActiveTimer() {
+    this.isWorkTime =! this.isWorkTime;
+    if (!this.isWorkTime && this.currentCycle % 2 == 0) {
+      this.currentTimer = "long break";
+    } else {
+      this.currentTimer = "short break";
     }
   }
-
-  /**
-   * Toggles isWorkTime to be true or false.
-   */
-  public void switchActiveTimer() {
-    this.isWorkTime = !this.isWorkTime;
-  }
-
 
   public void editWorkCycles(int numberOfWorkCycles) {
     workCycles = numberOfWorkCycles;
   }
 
   public void resetPomodoro(int numberOfWorkCycles) {
-    this.work = new DurationTimer(0, 25, 0);
-    this.short_break = new DurationTimer(0, 5, 0);
-    this.long_break = new DurationTimer(0,15, 0);
-    this.timers.put("work", this.work);
-    this.timers.put("short break", this.short_break);
-    this.timers.put("long break", this.long_break);
+    TimerLogic work = new DurationTimer(0, 25, 0);
+    TimerLogic short_break = new DurationTimer(0, 5, 0);
+    TimerLogic long_break = new DurationTimer(0,15, 0);
+    this.timers.put("work", work);
+    this.timers.put("short break", short_break);
+    this.timers.put("long break", long_break);
     this.isWorkTime = true;
+    this.currentTimer = "work";
     this.workCycles = numberOfWorkCycles;
   }
 
-  //some method for keeping track of the current time
+  /**
+   * This method gets the value of the current timer.
+   */
+  @Override
+  public long getCurrentTime() {
+    TimerLogic timer = this.timers.get(currentTimer);
+
+    return timer.getTimeRemaining();
+  }
 }

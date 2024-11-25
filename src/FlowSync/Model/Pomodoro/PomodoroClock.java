@@ -25,11 +25,6 @@ public interface PomodoroClock {
   void pauseTimer();
 
   /**
-   * This method resumes the current timer.
-   */
-  void resumeTimer();
-
-  /**
    * This method edits the duration of a specified timer.
    *
    * @param timerName
@@ -38,7 +33,9 @@ public interface PomodoroClock {
    */
   void editTimer(String timerName, int hours, int minutes);
 
-
+  /**
+   * Switches the current active timer
+   */
   void switchActiveTimer();
 
   /**
@@ -54,4 +51,9 @@ public interface PomodoroClock {
    * @param numberOfWorkCycles,the number of work cycles to complete.
    */
   void resetPomodoro(int numberOfWorkCycles);
+
+  /**
+   * This method gets the value of the current timer.
+   */
+  long getCurrentTime();
 }
