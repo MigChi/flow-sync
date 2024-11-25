@@ -17,7 +17,7 @@ public class PomodoroClockView implements TimerView {
 
   @Override
   public void display() {
-//    if (this.model.getActiveTimer().isCompleted()) {
+//    if (this.model.checkTimer()) {
 //      System.out.print("\Timer: " + this.model.getActiveTimer + " seconds");
 //    }
 //
