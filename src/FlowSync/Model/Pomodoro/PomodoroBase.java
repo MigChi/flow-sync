@@ -39,8 +39,10 @@ public class PomodoroBase implements PomodoroClock {
 
   public void switchActiveTimer() {
     this.isWorkTime =! this.isWorkTime;
-    if (!this.isWorkTime && ) {
-
+    if (!this.isWorkTime && this.currentCycle % 2 == 0) {
+      this.currentTimer = "long break";
+    } else {
+      this.currentTimer = "short break";
     }
   }
 
@@ -61,15 +63,11 @@ public class PomodoroBase implements PomodoroClock {
   }
 
   /**
-   * This method gets the current value of the timer.
+   * This method gets the value of the current timer.
    */
   @Override
-  public long checkTimerState() {
+  public long getCurrentTime() {
     TimerLogic timer = this.timers.get(currentTimer);
-
-    if (timer.isCompleted()) {
-      this.switchActiveTimer();
-    }
 
     return timer.getTimeRemaining();
   }

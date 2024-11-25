@@ -53,7 +53,7 @@ public interface PomodoroClock {
   void resetPomodoro(int numberOfWorkCycles);
 
   /**
-   * This method gets the current value of the timer.
+   * This method gets the value of the current timer.
    */
-  long checkTimerState();
+  long getCurrentTime();
 }
