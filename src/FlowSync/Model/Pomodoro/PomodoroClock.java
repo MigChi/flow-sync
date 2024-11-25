@@ -25,7 +25,7 @@ public interface PomodoroClock {
   void pauseTimer();
 
   /**
-   * This method edits the duration of a specified timer.
+   * This method edits the d  uration of a specified timer.
    *
    * @param timerName
    * @param hours
@@ -56,4 +56,10 @@ public interface PomodoroClock {
    * This method gets the value of the current timer.
    */
   long getCurrentTime();
+
+  /**
+   * This method changes the current timer to one we specify.
+   * @param timerName
+   */
+  void skipTimer(String timerName);
 }

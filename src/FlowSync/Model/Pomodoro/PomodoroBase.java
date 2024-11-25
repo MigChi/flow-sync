@@ -37,12 +37,21 @@ public class PomodoroBase implements PomodoroClock {
     this.timers.get(timerName).setDuration(hours, minutes);
   }
 
+  public void skipTimer(String timerName) {
+    this.timers.get(currentTimer).resetTimer();
+    this.currentTimer = timerName;
+  }
+
   public void switchActiveTimer() {
     this.isWorkTime =! this.isWorkTime;
-    if (!this.isWorkTime && this.currentCycle % 2 == 0) {
-      this.currentTimer = "long break";
+    if (!this.isWorkTime) {
+      if (this.currentCycle % 2 == 0) {
+        this.currentTimer = "long break";
+      } else {
+        this.currentTimer = "short break";
+      }
     } else {
-      this.currentTimer = "short break";
+      this.currentTimer = "work";
     }
   }
 
