@@ -1,6 +1,8 @@
 package FlowSync.Model.Pomodoro;
 
 
+import FlowSync.Model.Signal.Receivable;
+
 public interface TimerLogic {
 
   /**
