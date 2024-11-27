@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import FlowSync.Model.Signal.Receivable;
+
 /**
  * The {@code DurationTimer} class implements a timer based on a specified duration.
  * It allows starting, pausing, resetting, and retrieving the time remaining.
@@ -24,6 +26,7 @@ public class DurationTimer implements TimerLogic {
   private long timeRemaining;
   private TimerTask currentTask;
   private boolean isRunning;
+  private Receivable parent;
 
   /**
    * Constructs a {@code DurationTimer} with the specified hours, minutes, and seconds.
@@ -42,6 +45,7 @@ public class DurationTimer implements TimerLogic {
     this.isRunning = false;
     this.timeRemaining = this.initialTime.getSeconds();
     this.currentTask = null;
+    this.parent = null;
   }
 
   /**
@@ -54,12 +58,11 @@ public class DurationTimer implements TimerLogic {
   }
 
   /**
-   * Checks if the timer has completed.
-   *
-   * @return {@code true} if the timer has finished, {@code false} otherwise
+   * Sets the parent of this Timer to be an object of our choice
    */
-  public boolean isCompleted() {
-    return this.timeRemaining == 0;
+  @Override
+  public void setParent(Receivable parent) {
+    this.parent = parent;
   }
 
   /**
@@ -81,11 +84,11 @@ public class DurationTimer implements TimerLogic {
    * Starts the timer asynchronously. If the timer is already running, it does nothing.
    */
   public synchronized void startTimer() {
-    if (!this.isRunning && this.timeRemaining > 0) {
+    if (!this.isRunning && this.timeRemaining > 0 && this.parent != null) {
       this.isRunning = true;
       this.scheduleDuration();
     } else {
-      System.out.println("Timer is already running.");
+      System.out.println("Timer is already running/or parent is null");
     }
   }
 
@@ -93,13 +96,13 @@ public class DurationTimer implements TimerLogic {
    * Pauses the timer if it is running. If the timer is already paused, it does nothing.
    */
   public synchronized void pauseTimer() {
-    if (this.isRunning) {
+    if (this.isRunning && this.parent != null) {
       System.out.println("Pausing timer.");
       this.isRunning = false;
       this.currentTask.cancel();
       this.currentTask = null;
     } else {
-      System.out.println("Timer is already paused.");
+      System.out.println("Timer is already paused/or parent is null");
     }
   }
 
@@ -125,6 +128,7 @@ public class DurationTimer implements TimerLogic {
     }
 
     System.out.println("Starting Timer:");
+    Receivable parent = this.parent;
     this.currentTask = new TimerTask() {
       @Override
       public void run() {
@@ -132,6 +136,7 @@ public class DurationTimer implements TimerLogic {
         timeRemaining--;
         if (timeRemaining <= 0) {
           System.out.println("Ending Timer.");
+          parent.receive("finish");
           isRunning = false;
           cancel();
         }

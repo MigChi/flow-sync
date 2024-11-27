@@ -1,5 +1,6 @@
 package FlowSync.Model.Pomodoro;
 import java.util.HashMap;
+import FlowSync.Model.Signal.Receivable;
 
 /**
  * Represents the basic features of a pomodoro clock such as timers for
@@ -11,7 +12,7 @@ import java.util.HashMap;
  *
  */
 
-public class PomodoroBase implements PomodoroClock {
+public class PomodoroBase implements PomodoroClock, Receivable {
   private int workCycles;
   private boolean isWorkTime;
   private final HashMap<String, TimerLogic> timers = new HashMap<>();
@@ -79,5 +80,15 @@ public class PomodoroBase implements PomodoroClock {
     TimerLogic timer = this.timers.get(currentTimer);
 
     return timer.getTimeRemaining();
+  }
+
+  /**
+   * Invoked by another class.
+   *
+   * @param message optional message, can be null
+   */
+  @Override
+  public void receive(String message) {
+
   }
 }

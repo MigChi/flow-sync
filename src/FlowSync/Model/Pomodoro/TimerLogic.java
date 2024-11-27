@@ -11,9 +11,9 @@ public interface TimerLogic {
   long getTimeRemaining();
 
   /**
-   * Check if the timer is completed
+   * Sets the parent of this Timer to be an object that implements Receivable
    */
-  boolean isCompleted();
+  void setParent(Receivable parent);
 
   /**
    * set new duration amount
