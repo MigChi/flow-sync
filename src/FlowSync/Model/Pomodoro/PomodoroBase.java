@@ -64,6 +64,9 @@ public class PomodoroBase implements PomodoroClock, Receivable {
     TimerLogic work = new DurationTimer(0, 25, 0);
     TimerLogic short_break = new DurationTimer(0, 5, 0);
     TimerLogic long_break = new DurationTimer(0,15, 0);
+    work.setParent(this);
+    short_break.setParent(this);
+    long_break.setParent(this);
     this.timers.put("work", work);
     this.timers.put("short break", short_break);
     this.timers.put("long break", long_break);
