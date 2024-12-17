@@ -3,46 +3,75 @@ import java.util.HashMap;
 import FlowSync.Model.Signal.Receivable;
 
 /**
- * Represents the basic features of a pomodoro clock such as timers for
- * a work interval and a break interval (short or long breaks), the ability to
- * set and keep track of work cycles, the ability to start, stop, reset, and modify the
- * timers, and lastly, a notification system that lets users know when it's time for a break, or
- * time to get back tow work.
- * The timers are simply a duration of time.
- *
+ * Implements a functional Pomodoro timer system with work and break intervals.
+ * <p>
+ * {@code PomodoroBase} manages three timers (work, short break, long break),
+ * supports tracking work cycles, and allows control over timers via operations such as
+ * start, pause, reset, skip, and edit.
  */
-
 public class PomodoroBase implements PomodoroClock, Receivable {
-  private int workCycles;
-  private boolean isWorkTime;
-  private final HashMap<String, TimerLogic> timers = new HashMap<>();
-  private String currentTimer;
-  private int currentCycle = 0;
+  private int workCycles;     // Number of work intervals in a session
+  private boolean isWorkTime; // Tracks if the current timer is for work or break
+  private final HashMap<String, TimerLogic> timers = new HashMap<>(); // Timers storage
+  private String currentTimer;  // The currently active timer
+  private int currentCycle = 0; // Tracks the current work cycle
 
-  //Default constructor
+  /**
+   * Constructs a new {@code PomodoroBase} instance and initializes timers.
+   *
+   * @param numberOfWorkCycles The initial number of work cycles for the session.
+   */
   public PomodoroBase(int numberOfWorkCycles) {
     resetPomodoro(numberOfWorkCycles);
   }
 
-  public void startTimer() { //implement timer switching logic
+  /**
+   * Starts the currently active timer.
+   */
+  @Override
+  public void startTimer() {
     TimerLogic timer = this.timers.get(currentTimer);
     timer.startTimer();
   }
 
+  /**
+   * Pauses the currently active timer.
+   */
+  @Override
   public void pauseTimer() {
     TimerLogic timer = this.timers.get(currentTimer);
     timer.pauseTimer();
   }
 
+  /**
+   * Updates the duration of a specified timer.
+   *
+   * @param timerName Name of the timer to update.
+   * @param hours     New hour duration.
+   * @param minutes   New minute duration.
+   */
+  @Override
   public void editTimer(String timerName, int hours, int minutes) {
     this.timers.get(timerName).setDuration(hours, minutes);
   }
 
+  /**
+   * Skips the active timer and activates the specified timer.
+   *
+   * @param timerName Name of the timer to switch to.
+   */
+  @Override
   public void skipTimer(String timerName) {
     this.timers.get(currentTimer).resetTimer();
     this.currentTimer = timerName;
   }
 
+  /**
+   * Switches the active timer based on the current cycle state.
+   * <p>
+   * Alternates between work intervals and short/long breaks.
+   */
+  @Override
   public void switchActiveTimer() {
     this.isWorkTime =! this.isWorkTime;
     if (!this.isWorkTime) {
@@ -56,10 +85,22 @@ public class PomodoroBase implements PomodoroClock, Receivable {
     }
   }
 
+  /**
+   * Sets the total number of work cycles.
+   *
+   * @param numberOfWorkCycles The updated number of work cycles.
+   */
+  @Override
   public void editWorkCycles(int numberOfWorkCycles) {
     workCycles = numberOfWorkCycles;
   }
 
+  /**
+   * Resets the Pomodoro system to its initial configuration.
+   *
+   * @param numberOfWorkCycles The total number of work cycles to initialize.
+   */
+  @Override
   public void resetPomodoro(int numberOfWorkCycles) {
     TimerLogic work = new DurationTimer(0, 25, 0);
     TimerLogic short_break = new DurationTimer(0, 5, 0);
@@ -76,7 +117,9 @@ public class PomodoroBase implements PomodoroClock, Receivable {
   }
 
   /**
-   * This method gets the value of the current timer.
+   * Retrieves the time remaining for the active timer.
+   *
+   * @return Time remaining in seconds.
    */
   @Override
   public long getCurrentTime() {
@@ -86,9 +129,10 @@ public class PomodoroBase implements PomodoroClock, Receivable {
   }
 
   /**
-   * Invoked by another class.
+   * Handles incoming messages. This method can be used to process events
+   * such as timer completion notifications.
    *
-   * @param message optional message, can be null
+   * @param message The received message (optional).
    */
   @Override
   public void receive(String message) {
